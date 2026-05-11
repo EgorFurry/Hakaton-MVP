@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Трекер запроса</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #0d1117;
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+        .card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 32px;
+            width: 400px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #00e5a0;
+            background: #0d1117;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 16px;
+            border-radius: 8px;
+            border: none;
+            background: #00e5a0;
+            color: #0d1117;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .steps { margin: 24px 0; }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: #888;
+            transition: color 0.3s;
+        }
+        .step.active { color: #00e5a0; }
+        .dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #444;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .step.active .dot { background: #00e5a0; }
+        .result {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background: #0d1117;
+            border-radius: 8px;
+            border: 2px solid #00e5a0;
+            color: #00e5a0;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <input type="text" id="textInput" placeholder="Введите текст...">
+    <button id="sendBtn" onclick="sendRequest()">Отправить запрос</button>
+
+    <div class="steps">
+        <div class="step" id="step1">
+            <div class="dot"></div>
+            <span>Запрос отправлен</span>
+        </div>
+        <div class="step" id="step2">
+            <div class="dot"></div>
+            <span>Сервер получил запрос</span>
+        </div>
+        <div class="step" id="step3">
+            <div class="dot"></div>
+            <span>Обработка данных</span>
+        </div>
+        <div class="step" id="step4">
+            <div class="dot"></div>
+            <span>Ответ получен</span>
+        </div>
+    </div>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    async function sendRequest() {
+        const text = document.getElementById('textInput').value;
+        if (!text) return;
+
+        const btn = document.getElementById('sendBtn');
+        btn.disabled = true;
+
+        // Сбрасываем состояние
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById('step' + i).classList.remove('active');
+        }
+        document.getElementById('result').style.display = 'none';
+
+        // Шаг 1
+        await activate('step1', 600);
+        // Шаг 2
+        await activate('step2', 800);
+        // Шаг 3
+        await activate('step3', 600);
+
+        // Реальный запрос к FastAPI
+        const response = await fetch('http://127.0.0.1:8000/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        });
+        const data = await response.json();
+
+        // Шаг 4
+        await activate('step4', 400);
+
+        // Показываем результат
+        const result = document.getElementById('result');
+        result.style.display = 'block';
+        result.textContent = data.message;
+
+        btn.disabled = false;
+    }
+
+    function activate(stepId, delay) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                document.getElementById(stepId).classList.add('active');
+                resolve();
+            }, delay);
+        });
+    }
+</script>
+</body>
+</html>
