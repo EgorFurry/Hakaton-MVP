@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssistiveAI — Выбор кейса</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            background: #0d1117;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #21262d;
+        }
+        .logo { color: #00e5a0; font-size: 20px; font-weight: bold; }
+        .back { color: #888; text-decoration: none; font-size: 14px; }
+        .back:hover { color: #00e5a0; }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 40px;
+        }
+        h1 { font-size: 32px; margin-bottom: 12px; }
+        .subtitle { color: #888; margin-bottom: 48px; }
+        .cases {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .case-card {
+            background: #161b22;
+            border: 2px solid #21262d;
+            border-radius: 16px;
+            padding: 32px;
+            width: 320px;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.2s;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        .case-card:hover {
+            border-color: #00e5a0;
+            transform: translateY(-4px);
+        }
+        .case-card.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .case-number {
+            color: #00e5a0;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        .case-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        .case-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .case-desc {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: #21262d;
+            color: #888;
+        }
+        .badge.active {
+            background: #00e5a020;
+            color: #00e5a0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">AssistiveAI</div>
+    <a href="index.html" class="back">← Назад</a>
+</header>
+<main>
+    <h1>Выберите кейс</h1>
+    <p class="subtitle">Выберите инструмент с которым хотите работать</p>
+    <div class="cases">
+
+        <!-- Кейс 1 — активный -->
+        <a href="tracker.html" class="case-card">
+            <div class="case-number">КЕЙС 01</div>
+            <div class="case-icon">🎙️</div>
+            <div class="case-title">Обработка текста</div>
+            <div class="case-desc">
+                Отправьте текст на сервер и получите его 
+                воспроизведение в виде голоса.
+            </div>
+            <span class="badge active">Доступно</span>
+        </a>
+
+        <!-- Кейс 2 — заглушка -->
+        <div class="case-card disabled">
+            <div class="case-number">КЕЙС 02</div>
+            <div class="case-icon">🔍</div>
+            <div class="case-title">Крупный текст</div>
+            <div class="case-desc">
+                Загрузите фото или текст — получите увеличенную 
+                версию для слабовидящих.
+            </div>
+            <span class="badge">Скоро</span>
+        </div>
+
+        <!-- Кейс 3 — пустой -->
+        <div class="case-card disabled">
+            <div class="case-number">КЕЙС 03</div>
+            <div class="case-icon">⚙️</div>
+            <div class="case-title">В разработке</div>
+            <div class="case-desc">
+                Этот кейс находится в разработке. 
+                Следите за обновлениями.
+            </div>
+            <span class="badge">Скоро</span>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>
