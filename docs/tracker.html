@@ -105,45 +105,51 @@
         const btn = document.getElementById('sendBtn');
         btn.disabled = true;
 
-        // Сбрасываем состояние
+        // Сбрасываем
         for (let i = 1; i <= 4; i++) {
-            document.getElementById('step' + i).classList.remove('active');
+            document.getElementById('step' + i).classList.remove('active', 'loading');
         }
         document.getElementById('result').style.display = 'none';
 
-        // Шаг 1
-        await activate('step1', 600);
-        // Шаг 2
-        await activate('step2', 800);
-        // Шаг 3
-        await activate('step3', 600);
+        // Шаг 1 — сразу
+        document.getElementById('step1').classList.add('active');
 
-        // Реальный запрос к FastAPI
-        const response = await fetch('https://hakaton-mvp-production.up.railway.app/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: text })
-        });
-        const data = await response.json();
+        // Шаг 2 — fetch отправляем
+        await sleep(300);
+        document.getElementById('step2').classList.add('active');
 
-        // Шаг 4
-        await activate('step4', 400);
+        // Шаг 3 — ждём ответ (мигает)
+        document.getElementById('step3').classList.add('loading');
 
-        // Показываем результат
+        // Реальный запрос
+        let data;
+        try {
+            const response = await fetch('https://hakaton-mvp-production.up.railway.app/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+            data = await response.json();
+        } catch (e) {
+            data = { result: 'Ошибка подключения к серверу' };
+        }
+
+        // Шаг 3 готов, шаг 4
+        document.getElementById('step3').classList.remove('loading');
+        document.getElementById('step3').classList.add('active');
+        await sleep(200);
+        document.getElementById('step4').classList.add('active');
+
+        // Результат
         const result = document.getElementById('result');
         result.style.display = 'block';
-        result.textContent = data.result || data.message || "Нет ответа";
+        result.textContent = data.result || data.message || 'Нет ответа';
 
         btn.disabled = false;
     }
 
-    function activate(stepId, delay) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                document.getElementById(stepId).classList.add('active');
-                resolve();
-            }, delay);
-        });
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 </script>
 </body>
