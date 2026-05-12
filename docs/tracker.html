@@ -132,7 +132,7 @@
         // Показываем результат
         const result = document.getElementById('result');
         result.style.display = 'block';
-        result.textContent = data.message;
+        result.textContent = data.result || data.message || "Нет ответа";
 
         btn.disabled = false;
     }
