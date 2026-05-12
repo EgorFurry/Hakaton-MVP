@@ -95,6 +95,9 @@
     </div>
 
     <div class="result" id="result"></div>
+    <button id="speakBtn" onclick="speakResult()" style="display:none; width:100%; padding:12px; margin-top:12px; border-radius:8px; border:none; background:#1a2535; color:#00e5a0; font-size:15px; cursor:pointer; border: 1px solid #00e5a0;">
+        🔊 Озвучить ответ
+    </button>
 </div>
 
 <script>
@@ -146,11 +149,26 @@
         result.textContent = data.result || data.message || 'Нет ответа';
 
         btn.disabled = false;
+        document.getElementById('speakBtn').style.display = 'block';
     }
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+  function speakResult() {
+    const text = document.getElementById('result').textContent;
+    if (!text) return;
+
+    // Останавливаем если уже читает
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ru-RU';
+    utterance.rate = 0.9;  // чуть медленнее
+    utterance.pitch = 1;
+
+    window.speechSynthesis.speak(utterance);
+}
 </script>
 </body>
 </html>
