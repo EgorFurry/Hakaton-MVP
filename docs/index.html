@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpenSense — AI для доступного пространства</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(94, 234, 212, 0.1);
+      border: 1px solid rgba(94, 234, 212, 0.3);
+      border-radius: 100px;
+      color: #5EEAD4;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero-buttons { display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+    .secondary-btn {
+      display: inline-block;
+      padding: 16px 28px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #F5F7FF;
+      font-weight: 600;
+      transition: .3s;
+    }
+    .secondary-btn:hover { border-color: #5EEAD4; color: #5EEAD4; }
+    .primary-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+    .nav-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    /* Карточка справа */
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: #F5F7FF; }
+    .card-text { color: #A8B3CF; font-size: 0.9rem; line-height: 1.6; }
+    .card-tag {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 4px 12px;
+      background: rgba(94, 234, 212, 0.15);
+      color: #5EEAD4;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .glow {
+      position: absolute;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(94,234,212,0.15), transparent 70%);
+      top: -40px; right: -40px;
+      pointer-events: none;
+    }
+
+    /* Секция заботы */
+    .care-section { padding: 80px 0; }
+    .care-section h2 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .care-section h2 span { color: #5EEAD4; }
+    .care-subtitle {
+      text-align: center;
+      color: #A8B3CF;
+      margin-bottom: 48px;
+      font-size: 1.05rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .stat-card {
+      background: #151B2F;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 28px;
+      padding: 36px 32px;
+      text-align: center;
+      transition: .3s;
+    }
+    .stat-card:hover {
+      border-color: rgba(94, 234, 212, 0.3);
+      transform: translateY(-4px);
+    }
+    .stat-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #5EEAD4;
+      margin-bottom: 8px;
+    }
+    .stat-label { color: #A8B3CF; font-size: 0.95rem; line-height: 1.5; }
+
+    @media (max-width: 980px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">OpenSense</div>
+      <div class="nav-links">
+        <a href="index.html" class="active">Главная</a>
+        <a href="features.html">Функции</a>
+        <a href="accessibility.html">Accessibility</a>
+        <a href="contacts.html">Контакты</a>
+      </div>
+      <a href="cases.html" class="nav-btn">Начать</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-wrapper">
+        <div class="hero-left">
+          <div class="hero-badge">✦ AI для людей</div>
+          <h1>Мы заботимся о каждом <span>пользователе</span></h1>
+          <p>OpenSense — платформа доступности нового поколения. Голосовой ввод, анализ текста и AI-инструменты для людей с ограниченными возможностями.</p>
+          <div class="hero-buttons">
+            <a href="cases.html" class="primary-btn">Попробовать</a>
+            <a href="features.html" class="secondary-btn">Узнать больше</a>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-card">
+            <div class="glow"></div>
+            <div class="card-tag">LIVE</div>
+            <div class="card-title">Voice Assistant</div>
+            <div class="card-text">
+              AI анализирует речь, помогает воспринимать текст
+              и делает цифровую среду удобнее.
+            </div>
+            <div class="wave">
+              <span style="animation-delay:0s"></span>
+              <span style="animation-delay:.15s"></span>
+              <span style="animation-delay:.3s"></span>
+              <span style="animation-delay:.45s"></span>
+              <span style="animation-delay:.6s"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЕКЦИЯ ЗАБОТЫ -->
+  <section class="care-section">
+    <div class="container">
+      <h2>Почему <span>OpenSense</span>?</h2>
+      <p class="care-subtitle">Мы создаём технологии которые делают цифровой мир доступным для всех</p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">♿</div>
+          <div class="stat-number">1.3B</div>
+          <div class="stat-label">людей в мире живут с ограниченными возможностями и нуждаются в доступных технологиях</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-number">AI</div>
+          <div class="stat-label">технологии которые адаптируются под каждого пользователя индивидуально</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">❤️</div>
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">доступность без перерывов — наши инструменты работают когда они нужны</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

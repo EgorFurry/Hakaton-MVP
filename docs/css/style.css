@@ -200,3 +200,12 @@ section {
   0%, 100% { transform: scaleY(0.5); }
   50% { transform: scaleY(1.2); }
 }
+
+.step.loading .dot {
+    background: #00e5a0;
+    animation: pulse 0.8s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
