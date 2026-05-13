@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Vision — анализ изображений</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { display: flex; justify-content: center; padding: 40px; }
+        .card {
+            background: #161b22;
+            border-radius: 16px;
+            padding: 32px;
+            width: 500px;
+        }
+        .upload-area {
+            border: 2px dashed rgba(94,234,212,0.4);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: .3s;
+            margin-bottom: 16px;
+            color: #A8B3CF;
+        }
+        .upload-area:hover { border-color: #5EEAD4; color: #5EEAD4; }
+        .upload-area.has-image { padding: 0; border-style: solid; }
+        .preview-img {
+            width: 100%;
+            border-radius: 10px;
+            display: none;
+        }
+        .upload-icon { font-size: 3rem; margin-bottom: 12px; }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            margin-top: 16px;
+            border-radius: 10px;
+            border: none;
+            background: #5EEAD4;
+            color: #0B1020;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .btn-primary:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 10px;
+            border: 1px solid #5EEAD4;
+            background: transparent;
+            color: #5EEAD4;
+            font-size: 15px;
+            cursor: pointer;
+            display: none;
+        }
+        .steps { margin: 24px 0; }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: #888;
+            transition: color 0.3s;
+        }
+        .step.active { color: #5EEAD4; }
+        .dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #444;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .step.active .dot { background: #5EEAD4; }
+        .step.loading .dot {
+            background: #5EEAD4;
+            animation: pulse 0.8s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .result {
+            display: none;
+            margin-top: 16px;
+            padding: 20px;
+            background: #0B1020;
+            border-radius: 10px;
+            border: 1px solid rgba(94,234,212,0.3);
+            color: #F5F7FF;
+            line-height: 1.7;
+        }
+        .back-link {
+            display: inline-block;
+            color: #A8B3CF;
+            margin-bottom: 24px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .back-link:hover { color: #5EEAD4; }
+        h2 { margin-bottom: 8px; }
+        .subtitle { color: #A8B3CF; font-size: 14px; margin-bottom: 24px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <a href="cases.html" class="back-link">← Назад к кейсам</a>
+    <h2>🔍 Анализ изображения</h2>
+    <p class="subtitle">Загрузи фото — AI опишет что на нём и прочитает текст</p>
+
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div id="uploadPlaceholder">
+            <div class="upload-icon">🖼️</div>
+            <div>Нажми чтобы загрузить фото</div>
+            <div style="font-size:12px; margin-top:8px;">JPG, PNG, WEBP</div>
+        </div>
+        <img id="previewImg" class="preview-img" alt="preview">
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
+
+    <button class="btn-primary" id="analyzeBtn" onclick="analyzeImage()" disabled>
+        Анализировать изображение
+    </button>
+
+    <div class="steps">
+        <div class="step" id="step1"><div class="dot"></div><span>Изображение загружено</span></div>
+        <div class="step" id="step2"><div class="dot"></div><span>Отправка на сервер</span></div>
+        <div class="step" id="step3"><div class="dot"></div><span>AI анализирует</span></div>
+        <div class="step" id="step4"><div class="dot"></div><span>Результат готов</span></div>
+    </div>
+
+    <div class="result" id="result"></div>
+    <button class="btn-secondary" id="speakBtn" onclick="speakResult()">
+        🔊 Озвучить результат
+    </button>
+</div>
+
+<script>
+    let imageBase64 = null;
+
+    function handleFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const fullBase64 = e.target.result;
+            // Убираем префикс "data:image/jpeg;base64,"
+            imageBase64 = fullBase64.split(',')[1];
+
+            // Показываем превью
+            const img = document.getElementById('previewImg');
+            img.src = fullBase64;
+            img.style.display = 'block';
+            document.getElementById('uploadPlaceholder').style.display = 'none';
+            document.getElementById('uploadArea').classList.add('has-image');
+
+            // Активируем кнопку
+            document.getElementById('analyzeBtn').disabled = false;
+
+            // Сбрасываем шаги
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById('step' + i).classList.remove('active', 'loading');
+            }
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('speakBtn').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function analyzeImage() {
+        if (!imageBase64) return;
+
+        const btn = document.getElementById('analyzeBtn');
+        btn.disabled = true;
+
+        // Шаг 1
+        document.getElementById('step1').classList.add('active');
+        await sleep(300);
+
+        // Шаг 2
+        document.getElementById('step2').classList.add('active');
+        await sleep(200);
+
+        // Шаг 3 — мигает пока ждём
+        document.getElementById('step3').classList.add('loading');
+
+        let data;
+        try {
+            const response = await fetch('https://hakaton-mvp-production.up.railway.app/analyze-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    image: imageBase64,
+                    prompt: 'Опиши подробно что на изображении. Если есть текст — прочитай его полностью. Отвечай на русском языке.'
+                })
+            });
+            data = await response.json();
+        } catch (e) {
+            data = { result: 'Ошибка подключения к серверу' };
+        }
+
+        // Шаг 3 готов, шаг 4
+        document.getElementById('step3').classList.remove('loading');
+        document.getElementById('step3').classList.add('active');
+        await sleep(200);
+        document.getElementById('step4').classList.add('active');
+
+        // Результат
+        const result = document.getElementById('result');
+        result.style.display = 'block';
+        result.textContent = data.result || data.message || 'Нет ответа';
+
+        document.getElementById('speakBtn').style.display = 'block';
+        btn.disabled = false;
+    }
+
+    function speakResult() {
+        const text = document.getElementById('result').textContent;
+        if (!text) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ru-RU';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+</body>
+</html>
