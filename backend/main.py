@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import logging
 from config.settings import APP_NAME, VERSION
-from services.ai_service import analyze_text
+from services.ai_service import analyze_text, analyze_image_with_ai
 import base64
 
 # Логирование
