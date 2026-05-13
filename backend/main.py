@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import logging
 from config.settings import APP_NAME, VERSION
 from services.ai_service import analyze_text
+import base64
 
 # Логирование
 logging.basicConfig(
@@ -50,5 +51,25 @@ async def analyze(request: TextRequest):
     return {
         "status": "success",
         "input": request.text,
+        "result": result
+    }
+
+
+class ImageRequest(BaseModel):
+    image: str  # base64 строка
+    prompt: str = "Опиши что на изображении. Если есть текст — прочитай его."
+
+
+@app.post("/analyze-image")
+async def analyze_image(request: ImageRequest):
+    if not request.image:
+        raise HTTPException(status_code=400, detail="Изображение не может быть пустым")
+
+    logger.info("Image analyze request received")
+
+    result = await analyze_image_with_ai(request.image, request.prompt)
+
+    return {
+        "status": "success",
         "result": result
     }
